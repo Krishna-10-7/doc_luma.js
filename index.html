@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LumaJS - Documentation</title>
+    <title>LumaJS Documentation - Built with LumaJS</title>
     <style>
         * {
             margin: 0;
@@ -439,55 +439,11 @@
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="logo">LumaJS</div>
-        <nav class="nav">
-            <a href="#getting-started">Get Started</a>
-            <a href="#docs">Docs</a>
-            <a href="#examples">Examples</a>
-            <a href="https://github.com/Krishna-10-7/LUMA" target="_blank">GitHub</a>
-            <a href="https://www.npmjs.com/package/@krishna.dev1/lumajs" target="_blank">npm</a>
-        </nav>
-    </header>
+    <!-- App Root - Everything will be rendered by LumaJS -->
+    <div id="app"></div>
 
-    <!-- Sidebar -->
-    <aside class="sidebar">
-        <div class="sidebar-section">
-            <div class="sidebar-title">Getting Started</div>
-            <a href="#introduction" class="sidebar-link active">Introduction</a>
-            <a href="#installation" class="sidebar-link">Installation</a>
-            <a href="#quick-start" class="sidebar-link">Quick Start</a>
-        </div>
-        <div class="sidebar-section">
-            <div class="sidebar-title">Core API</div>
-            <a href="#reactivity" class="sidebar-link">Reactivity</a>
-            <a href="#hooks" class="sidebar-link">Hooks</a>
-            <a href="#components" class="sidebar-link">Components</a>
-        </div>
-        <div class="sidebar-section">
-            <div class="sidebar-title">Animation</div>
-            <a href="#animations" class="sidebar-link">Animations</a>
-            <a href="#timeline" class="sidebar-link">Timeline</a>
-            <a href="#scroll-triggers" class="sidebar-link">Scroll Triggers</a>
-        </div>
-        <div class="sidebar-section">
-            <div class="sidebar-title">3D Rendering</div>
-            <a href="#3d-basics" class="sidebar-link">3D Basics</a>
-            <a href="#geometries" class="sidebar-link">Geometries</a>
-            <a href="#materials" class="sidebar-link">Materials</a>
-            <a href="#camera" class="sidebar-link">Camera & Controls</a>
-        </div>
-        <div class="sidebar-section">
-            <div class="sidebar-title">Examples</div>
-            <a href="#example-counter" class="sidebar-link">Counter App</a>
-            <a href="#example-animation" class="sidebar-link">Animation Demo</a>
-            <a href="#example-3d" class="sidebar-link">3D Scene</a>
-        </div>
-    </aside>
-
-    <!-- Main Content -->
-    <main class="main-content">
+    <!-- Main Content Container for fallback -->
+    <main class="main-content" style="display: none;">
         <!-- Hero Section -->
         <div class="hero">
             <h1>LumaJS Documentation</h1>
@@ -863,12 +819,106 @@ camera.position[<span class="number">2</span>] = <span class="number">5</span>;
         </section>
     </main>
 
-    <!-- Load LumaJS from node_modules -->
+    <!-- LumaJS Application -->
     <script type="module">
-        // Import LumaJS from npm package
-        import { h, mount, useState } from './node_modules/@krishna.dev1/lumajs/dist/luma.esm.js';
+        import { h, mount, useState, useEffect } from './node_modules/@krishna.dev1/lumajs/dist/luma.esm.js';
 
-        // Counter Demo
+        // Header Component
+        function Header() {
+            return h('header', { class: 'header' },
+                h('div', { class: 'logo' }, 'LumaJS'),
+                h('nav', { class: 'nav' },
+                    h('a', { href: '#getting-started' }, 'Get Started'),
+                    h('a', { href: '#docs' }, 'Docs'),
+                    h('a', { href: '#examples' }, 'Examples'),
+                    h('a', { 
+                        href: 'https://github.com/Krishna-10-7/LUMA', 
+                        target: '_blank' 
+                    }, 'GitHub'),
+                    h('a', { 
+                        href: 'https://www.npmjs.com/package/@krishna.dev1/lumajs', 
+                        target: '_blank' 
+                    }, 'npm')
+                )
+            );
+        }
+
+        // Sidebar Link Component
+        function SidebarLink({ href, children, isActive, onClick }) {
+            return h('a', {
+                href,
+                class: `sidebar-link${isActive ? ' active' : ''}`,
+                onClick: (e) => {
+                    e.preventDefault();
+                    onClick(href);
+                }
+            }, children);
+        }
+
+        // Sidebar Component
+        function Sidebar({ activeSection, onNavigate }) {
+            const sections = [
+                {
+                    title: 'Getting Started',
+                    links: [
+                        { href: '#introduction', label: 'Introduction' },
+                        { href: '#installation', label: 'Installation' },
+                        { href: '#quick-start', label: 'Quick Start' }
+                    ]
+                },
+                {
+                    title: 'Core API',
+                    links: [
+                        { href: '#reactivity', label: 'Reactivity' },
+                        { href: '#hooks', label: 'Hooks' },
+                        { href: '#components', label: 'Components' }
+                    ]
+                },
+                {
+                    title: 'Animation',
+                    links: [
+                        { href: '#animations', label: 'Animations' },
+                        { href: '#timeline', label: 'Timeline' },
+                        { href: '#scroll-triggers', label: 'Scroll Triggers' }
+                    ]
+                },
+                {
+                    title: '3D Rendering',
+                    links: [
+                        { href: '#3d-basics', label: '3D Basics' },
+                        { href: '#geometries', label: 'Geometries' },
+                        { href: '#materials', label: 'Materials' },
+                        { href: '#camera', label: 'Camera & Controls' }
+                    ]
+                },
+                {
+                    title: 'Examples',
+                    links: [
+                        { href: '#example-counter', label: 'Counter App' },
+                        { href: '#example-animation', label: 'Animation Demo' },
+                        { href: '#example-3d', label: '3D Scene' }
+                    ]
+                }
+            ];
+
+            return h('aside', { class: 'sidebar' },
+                ...sections.map(section =>
+                    h('div', { class: 'sidebar-section' },
+                        h('div', { class: 'sidebar-title' }, section.title),
+                        ...section.links.map(link =>
+                            SidebarLink({
+                                href: link.href,
+                                children: link.label,
+                                isActive: activeSection === link.href,
+                                onClick: onNavigate
+                            })
+                        )
+                    )
+                )
+            );
+        }
+
+        // Counter Demo Component
         function CounterDemo() {
             const [count, setCount] = useState(0);
 
@@ -890,48 +940,219 @@ camera.position[<span class="number">2</span>] = <span class="number">5</span>;
             );
         }
 
-        // Mount counter demo
-        const counterContainer = document.getElementById('counter-demo');
-        if (counterContainer) {
-            mount(CounterDemo, counterContainer);
+        // Animation Demo Component
+        function AnimationDemo() {
+            const [rotation, setRotation] = useState(0);
+
+            const animate = () => {
+                setRotation(rotation === 360 ? 0 : 360);
+            };
+
+            return h('div', { class: 'demo-content' },
+                h('div', {
+                    class: 'animated-box',
+                    style: {
+                        transform: `rotate(${rotation}deg) scale(${rotation === 360 ? 1.2 : 1})`,
+                        transition: 'all 1s cubic-bezier(0.68, -0.55, 0.265, 1.55)'
+                    }
+                }),
+                h('div', { style: { textAlign: 'center' } },
+                    h('button', {
+                        class: 'btn',
+                        onClick: animate
+                    }, 'Animate')
+                )
+            );
         }
 
-        // Simple animation for the animated box
-        const animateBtn = document.getElementById('animate-btn');
-        const animatedBox = document.getElementById('animated-box');
-        
-        if (animateBtn && animatedBox) {
-            animateBtn.addEventListener('click', () => {
-                // Simple CSS animation as fallback since we're loading from node_modules
-                animatedBox.style.transition = 'all 1s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
-                
-                const currentTransform = animatedBox.style.transform || '';
-                const isRotated = currentTransform.includes('rotate');
-                
-                if (isRotated) {
-                    animatedBox.style.transform = 'rotate(0deg) scale(1)';
-                } else {
-                    animatedBox.style.transform = 'rotate(360deg) scale(1.2)';
-                }
-            });
+        // Feature Card Component
+        function FeatureCard({ icon, title, description }) {
+            return h('div', { class: 'feature-card' },
+                h('div', { class: 'feature-icon' }, icon),
+                h('div', { class: 'feature-title' }, title),
+                h('div', { class: 'feature-desc' }, description)
+            );
         }
 
-        // Smooth scroll for sidebar links
-        document.querySelectorAll('.sidebar-link').forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const targetId = link.getAttribute('href').substring(1);
+        // Code Block Component
+        function CodeBlock({ code, language = 'javascript' }) {
+            return h('div', { class: 'code-block' },
+                h('pre', {},
+                    h('code', {}, code)
+                )
+            );
+        }
+
+        // Main Content Component
+        function MainContent() {
+            return h('main', { class: 'main-content' },
+                // Hero Section
+                h('div', { class: 'hero' },
+                    h('h1', {}, 'LumaJS Documentation'),
+                    h('p', {}, 'A next-generation JavaScript framework combining React-like reactivity, GSAP-style animations, and Three.js-like 3D rendering in one lightweight library.'),
+                    h('div', { class: 'install-box' },
+                        h('code', {}, 'npm install @krishna.dev1/lumajs')
+                    ),
+                    h('div', { class: 'stats' },
+                        h('div', { class: 'stat' },
+                            h('div', { class: 'stat-value' }, '~22KB'),
+                            h('div', { class: 'stat-label' }, 'Total Bundle Size')
+                        ),
+                        h('div', { class: 'stat' },
+                            h('div', { class: 'stat-value' }, '97%'),
+                            h('div', { class: 'stat-label' }, 'Smaller than React+GSAP+Three.js')
+                        ),
+                        h('div', { class: 'stat' },
+                            h('div', { class: 'stat-value' }, '0'),
+                            h('div', { class: 'stat-label' }, 'Dependencies')
+                        )
+                    )
+                ),
+
+                // Introduction
+                h('section', { id: 'introduction', class: 'section' },
+                    h('h2', {}, 'Introduction'),
+                    h('p', {}, 'LumaJS is designed for developers who want the power of modern frameworks without the bloat. Built from the ground up with performance in mind, it provides three core capabilities in a single, unified package.'),
+                    h('div', { class: 'feature-grid' },
+                        FeatureCard({
+                            icon: '⚛️',
+                            title: 'React-like Reactivity',
+                            description: 'Hooks, components, and state management with a familiar API. Just 3KB for the core reactivity system.'
+                        }),
+                        FeatureCard({
+                            icon: '✨',
+                            title: 'GSAP-style Animations',
+                            description: '30+ easing functions, timeline sequencing, and scroll triggers. Professional animations in just 7KB.'
+                        }),
+                        FeatureCard({
+                            icon: '🎨',
+                            title: 'Three.js-like 3D',
+                            description: 'WebGL rendering with custom shaders, geometries, and camera controls. Full 3D engine in only 12KB.'
+                        })
+                    )
+                ),
+
+                // Installation
+                h('section', { id: 'installation', class: 'section' },
+                    h('h2', {}, 'Installation'),
+                    h('h3', {}, 'Via npm'),
+                    CodeBlock({ code: '# Install via npm\nnpm install @krishna.dev1/lumajs\n\n# Or using yarn\nyarn add @krishna.dev1/lumajs' }),
+                    h('h3', {}, 'Via CDN'),
+                    CodeBlock({ code: '<!-- Core + Animation + 3D (all modules) -->\n<script src="https://unpkg.com/@krishna.dev1/lumajs/dist/luma.umd.min.js"></script>' })
+                ),
+
+                // Quick Start
+                h('section', { id: 'quick-start', class: 'section' },
+                    h('h2', {}, 'Quick Start'),
+                    h('p', {}, 'Get up and running with LumaJS in under a minute.'),
+                    CodeBlock({ code: `import { h, mount, useState } from '@krishna.dev1/lumajs';\n\nfunction Counter() {\n  const [count, setCount] = useState(0);\n\n  return h('div', {},\n    h('h1', {}, \`Count: \${count}\`),\n    h('button', { \n      onClick: () => setCount(count + 1) \n    }, 'Increment')\n  );\n}\n\nmount(Counter, document.getElementById('app'));` }),
+                    h('div', { class: 'demo-box' },
+                        h('div', { class: 'demo-title' }, 'Interactive Demo'),
+                        h('div', { class: 'demo-content' }, CounterDemo())
+                    )
+                ),
+
+                // Reactivity
+                h('section', { id: 'reactivity', class: 'section' },
+                    h('h2', {}, 'Core Reactivity'),
+                    h('p', {}, 'LumaJS provides a React-like reactivity system with hooks and components.'),
+                    h('h3', {}, 'Creating Elements with h()'),
+                    CodeBlock({ code: `import { h } from '@krishna.dev1/lumajs';\n\n// Basic element\nconst element = h('div', { class: 'container' }, 'Hello World');\n\n// With styles\nconst styled = h('button', {\n  style: { color: 'blue', padding: '10px' },\n  onClick: () => console.log('clicked')\n}, 'Click me');\n\n// Nested elements\nconst nested = h('div', {},\n  h('h1', {}, 'Title'),\n  h('p', {}, 'Paragraph')\n);` })
+                ),
+
+                // Hooks
+                h('section', { id: 'hooks', class: 'section' },
+                    h('h2', {}, 'Hooks'),
+                    h('p', {}, 'LumaJS implements all the essential React hooks with a compatible API.'),
+                    h('table', { class: 'api-table' },
+                        h('thead', {},
+                            h('tr', {},
+                                h('th', {}, 'Hook'),
+                                h('th', {}, 'Description'),
+                                h('th', {}, 'Usage')
+                            )
+                        ),
+                        h('tbody', {},
+                            h('tr', {},
+                                h('td', {}, h('code', {}, 'useState')),
+                                h('td', {}, 'Manage component state'),
+                                h('td', {}, h('code', {}, 'const [value, setValue] = useState(initial)'))
+                            ),
+                            h('tr', {},
+                                h('td', {}, h('code', {}, 'useEffect')),
+                                h('td', {}, 'Side effects with cleanup'),
+                                h('td', {}, h('code', {}, 'useEffect(() => { ... }, [deps])'))
+                            ),
+                            h('tr', {},
+                                h('td', {}, h('code', {}, 'useRef')),
+                                h('td', {}, 'Mutable references'),
+                                h('td', {}, h('code', {}, 'const ref = useRef(initial)'))
+                            ),
+                            h('tr', {},
+                                h('td', {}, h('code', {}, 'useMemo')),
+                                h('td', {}, 'Memoized computed values'),
+                                h('td', {}, h('code', {}, 'const value = useMemo(() => compute(), [deps])'))
+                            ),
+                            h('tr', {},
+                                h('td', {}, h('code', {}, 'useCallback')),
+                                h('td', {}, 'Memoized functions'),
+                                h('td', {}, h('code', {}, 'const fn = useCallback(() => { ... }, [deps])'))
+                            )
+                        )
+                    )
+                ),
+
+                // Animations
+                h('section', { id: 'animations', class: 'section' },
+                    h('h2', {}, 'Animations'),
+                    h('p', {}, 'Professional-grade animations with a GSAP-like API.'),
+                    h('h3', {}, 'Basic Animation'),
+                    CodeBlock({ code: `import { to } from '@krishna.dev1/lumajs/dist/luma-animate';\n\n// Animate an element\nto(element, {\n  opacity: 0,\n  x: 100,\n  rotation: 180\n}, {\n  duration: 1000,\n  easing: 'easeOutBack'\n});` }),
+                    h('div', { class: 'demo-box' },
+                        h('div', { class: 'demo-title' }, 'Animation Demo'),
+                        AnimationDemo()
+                    )
+                ),
+
+                // 3D Basics
+                h('section', { id: '3d-basics', class: 'section' },
+                    h('h2', {}, '3D Rendering'),
+                    h('p', {}, 'Create stunning 3D scenes with WebGL, all in just 12KB.'),
+                    h('h3', {}, 'Basic 3D Scene'),
+                    CodeBlock({ code: `import { Scene, PerspectiveCamera, WebGLRenderer, Mesh, BoxGeometry, PhongMaterial } from '@krishna.dev1/lumajs/dist/luma-3d';\n\n// Create scene\nconst scene = new Scene();\nconst camera = new PerspectiveCamera(75, width / height, 0.1, 1000);\nconst renderer = new WebGLRenderer(canvas);\n\n// Create mesh\nconst geometry = new BoxGeometry(1, 1, 1);\nconst material = new PhongMaterial({ color: [0.5, 0.5, 1.0] });\nconst cube = new Mesh(geometry, material);\n\nscene.add(cube);\ncamera.position[2] = 5;\n\n// Animation loop\nfunction animate() {\n  requestAnimationFrame(animate);\n  cube.rotation[1] += 0.01;\n  renderer.render(scene, camera);\n}\n\nanimate();` })
+                ),
+
+                // Example
+                h('section', { id: 'example-counter', class: 'section' },
+                    h('h2', {}, 'Complete Examples'),
+                    h('h3', {}, 'Counter Application'),
+                    CodeBlock({ code: `import { h, mount, useState } from '@krishna.dev1/lumajs';\n\nfunction App() {\n  const [count, setCount] = useState(0);\n\n  return h('div', { style: { padding: '20px' } },\n    h('h1', {}, \`Count: \${count}\`),\n    h('div', { style: { display: 'flex', gap: '10px' } },\n      h('button', { onClick: () => setCount(count - 1) }, '-'),\n      h('button', { onClick: () => setCount(0) }, 'Reset'),\n      h('button', { onClick: () => setCount(count + 1) }, '+')\n    )\n  );\n}\n\nmount(App, document.getElementById('root'));` })
+                )
+            );
+        }
+
+        // Root App Component
+        function App() {
+            const [activeSection, setActiveSection] = useState('#introduction');
+
+            const handleNavigate = (href) => {
+                setActiveSection(href);
+                const targetId = href.substring(1);
                 const targetElement = document.getElementById(targetId);
-                
                 if (targetElement) {
                     targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    
-                    // Update active state
-                    document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
-                    link.classList.add('active');
                 }
-            });
-        });
+            };
+
+            return h('div', {},
+                Header(),
+                Sidebar({ activeSection, onNavigate: handleNavigate }),
+                MainContent()
+            );
+        }
+
+        // Mount the application
+        mount(App, document.getElementById('app'));
     </script>
 </body>
 </html>
