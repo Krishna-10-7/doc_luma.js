@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LumaJS - Documentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #8b5cf6;
+            --accent: #ec4899;
+            --bg: #0f172a;
+            --bg-light: #1e293b;
+            --bg-lighter: #334155;
+            --text: #f8fafc;
+            --text-dim: #cbd5e1;
+            --border: #334155;
+            --code-bg: #1e293b;
+            --success: #10b981;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav {
+            margin-left: auto;
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav a {
+            color: var(--text-dim);
+            text-decoration: none;
+            transition: color 0.3s;
+            font-weight: 500;
+        }
+
+        .nav a:hover {
+            color: var(--primary);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 70px;
+            left: 0;
+            width: 280px;
+            height: calc(100vh - 70px);
+            background: var(--bg-light);
+            border-right: 1px solid var(--border);
+            overflow-y: auto;
+            padding: 2rem 0;
+        }
+
+        .sidebar-section {
+            margin-bottom: 2rem;
+        }
+
+        .sidebar-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            font-weight: 600;
+            padding: 0 1.5rem;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.5px;
+        }
+
+        .sidebar-link {
+            display: block;
+            padding: 0.6rem 1.5rem;
+            color: var(--text-dim);
+            text-decoration: none;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+
+        .sidebar-link:hover {
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--primary);
+            border-left-color: var(--primary);
+        }
+
+        .sidebar-link.active {
+            background: rgba(99, 102, 241, 0.15);
+            color: var(--primary);
+            border-left-color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            margin-top: 70px;
+            padding: 3rem;
+            max-width: 1200px;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 4rem 0;
+            margin-bottom: 4rem;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-dim);
+            max-width: 700px;
+            margin: 0 auto 2rem;
+        }
+
+        .install-box {
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem 1.5rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .install-box code {
+            color: var(--primary);
+            font-size: 1rem;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-top: 2rem;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+        }
+
+        /* Content Sections */
+        .section {
+            margin-bottom: 4rem;
+        }
+
+        .section h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--text);
+        }
+
+        .section h3 {
+            font-size: 1.5rem;
+            margin: 2rem 0 1rem;
+            color: var(--text);
+        }
+
+        .section p {
+            color: var(--text-dim);
+            margin-bottom: 1rem;
+            line-height: 1.8;
+        }
+
+        .code-block {
+            background: var(--code-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            overflow-x: auto;
+        }
+
+        .code-block pre {
+            margin: 0;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .code-block code {
+            color: var(--text);
+        }
+
+        /* Demo Box */
+        .demo-box {
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .demo-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .demo-content {
+            background: var(--bg);
+            border-radius: 6px;
+            padding: 1.5rem;
+            min-height: 150px;
+        }
+
+        /* Buttons */
+        .btn {
+            background: var(--primary);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: var(--bg-lighter);
+            color: var(--text);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border);
+        }
+
+        /* Feature Grid */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .feature-card {
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 2rem;
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-desc {
+            color: var(--text-dim);
+            line-height: 1.6;
+        }
+
+        /* API Table */
+        .api-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            background: var(--bg-light);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .api-table th {
+            background: var(--bg-lighter);
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .api-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .api-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .api-table code {
+            background: var(--code-bg);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            color: var(--primary);
+        }
+
+        /* Interactive Demo */
+        .counter-demo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .counter-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            min-width: 60px;
+            text-align: center;
+        }
+
+        .animated-box {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 8px;
+            margin: 2rem auto;
+        }
+
+        .canvas-3d {
+            width: 100%;
+            height: 400px;
+            border-radius: 8px;
+            display: block;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
+        }
+
+        /* Syntax highlighting */
+        .keyword { color: #c792ea; }
+        .string { color: #c3e88d; }
+        .function { color: #82aaff; }
+        .comment { color: #546e7a; font-style: italic; }
+        .number { color: #f78c6c; }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 2rem 1rem;
+            }
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">LumaJS</div>
+        <nav class="nav">
+            <a href="#getting-started">Get Started</a>
+            <a href="#docs">Docs</a>
+            <a href="#examples">Examples</a>
+            <a href="https://github.com/Krishna-10-7/LUMA" target="_blank">GitHub</a>
+            <a href="https://www.npmjs.com/package/@krishna.dev1/lumajs" target="_blank">npm</a>
+        </nav>
+    </header>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-section">
+            <div class="sidebar-title">Getting Started</div>
+            <a href="#introduction" class="sidebar-link active">Introduction</a>
+            <a href="#installation" class="sidebar-link">Installation</a>
+            <a href="#quick-start" class="sidebar-link">Quick Start</a>
+        </div>
+        <div class="sidebar-section">
+            <div class="sidebar-title">Core API</div>
+            <a href="#reactivity" class="sidebar-link">Reactivity</a>
+            <a href="#hooks" class="sidebar-link">Hooks</a>
+            <a href="#components" class="sidebar-link">Components</a>
+        </div>
+        <div class="sidebar-section">
+            <div class="sidebar-title">Animation</div>
+            <a href="#animations" class="sidebar-link">Animations</a>
+            <a href="#timeline" class="sidebar-link">Timeline</a>
+            <a href="#scroll-triggers" class="sidebar-link">Scroll Triggers</a>
+        </div>
+        <div class="sidebar-section">
+            <div class="sidebar-title">3D Rendering</div>
+            <a href="#3d-basics" class="sidebar-link">3D Basics</a>
+            <a href="#geometries" class="sidebar-link">Geometries</a>
+            <a href="#materials" class="sidebar-link">Materials</a>
+            <a href="#camera" class="sidebar-link">Camera & Controls</a>
+        </div>
+        <div class="sidebar-section">
+            <div class="sidebar-title">Examples</div>
+            <a href="#example-counter" class="sidebar-link">Counter App</a>
+            <a href="#example-animation" class="sidebar-link">Animation Demo</a>
+            <a href="#example-3d" class="sidebar-link">3D Scene</a>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Hero Section -->
+        <div class="hero">
+            <h1>LumaJS Documentation</h1>
+            <p>A next-generation JavaScript framework combining React-like reactivity, GSAP-style animations, and Three.js-like 3D rendering in one lightweight library.</p>
+            <div class="install-box">
+                <code>npm install @krishna.dev1/lumajs</code>
+            </div>
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-value">~22KB</div>
+                    <div class="stat-label">Total Bundle Size</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">97%</div>
+                    <div class="stat-label">Smaller than React+GSAP+Three.js</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">0</div>
+                    <div class="stat-label">Dependencies</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Introduction -->
+        <section id="introduction" class="section">
+            <h2>Introduction</h2>
+            <p>LumaJS is designed for developers who want the power of modern frameworks without the bloat. Built from the ground up with performance in mind, it provides three core capabilities in a single, unified package.</p>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">⚛️</div>
+                    <div class="feature-title">React-like Reactivity</div>
+                    <div class="feature-desc">Hooks, components, and state management with a familiar API. Just 3KB for the core reactivity system.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">✨</div>
+                    <div class="feature-title">GSAP-style Animations</div>
+                    <div class="feature-desc">30+ easing functions, timeline sequencing, and scroll triggers. Professional animations in just 7KB.</div>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <div class="feature-title">Three.js-like 3D</div>
+                    <div class="feature-desc">WebGL rendering with custom shaders, geometries, and camera controls. Full 3D engine in only 12KB.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Installation -->
+        <section id="installation" class="section">
+            <h2>Installation</h2>
+            
+            <h3>Via npm</h3>
+            <div class="code-block">
+                <pre><code><span class="comment"># Install via npm</span>
+npm install @krishna.dev1/lumajs
+
+<span class="comment"># Or using yarn</span>
+yarn add @krishna.dev1/lumajs</code></pre>
+            </div>
+
+            <h3>Via CDN</h3>
+            <div class="code-block">
+                <pre><code><span class="comment">&lt;!-- Core + Animation + 3D (all modules) --&gt;</span>
+<span class="keyword">&lt;script</span> <span class="string">src</span>=<span class="string">"https://unpkg.com/@krishna.dev1/lumajs/dist/luma.umd.min.js"</span><span class="keyword">&gt;&lt;/script&gt;</span>
+
+<span class="comment">&lt;!-- Just core reactivity --&gt;</span>
+<span class="keyword">&lt;script</span> <span class="string">src</span>=<span class="string">"https://unpkg.com/@krishna.dev1/lumajs/dist/luma.esm.min.js"</span> <span class="string">type</span>=<span class="string">"module"</span><span class="keyword">&gt;&lt;/script&gt;</span></code></pre>
+            </div>
+        </section>
+
+        <!-- Quick Start -->
+        <section id="quick-start" class="section">
+            <h2>Quick Start</h2>
+            <p>Get up and running with LumaJS in under a minute.</p>
+
+            <div class="code-block">
+                <pre><code><span class="keyword">import</span> { h, mount, useState } <span class="keyword">from</span> <span class="string">'@krishna.dev1/lumajs'</span>;
+
+<span class="keyword">function</span> <span class="function">Counter</span>() {
+  <span class="keyword">const</span> [count, setCount] = <span class="function">useState</span>(<span class="number">0</span>);
+
+  <span class="keyword">return</span> <span class="function">h</span>(<span class="string">'div'</span>, {},
+    <span class="function">h</span>(<span class="string">'h1'</span>, {}, <span class="string">`Count: ${count}`</span>),
+    <span class="function">h</span>(<span class="string">'button'</span>, { 
+      <span class="string">onClick:</span> () => <span class="function">setCount</span>(count + <span class="number">1</span>) 
+    }, <span class="string">'Increment'</span>)
+  );
+}
+
+<span class="function">mount</span>(Counter, document.getElementById(<span class="string">'app'</span>));</code></pre>
+            </div>
+
+            <div class="demo-box">
+                <div class="demo-title">Interactive Demo</div>
+                <div id="counter-demo" class="demo-content"></div>
+            </div>
+        </section>
+
+        <!-- Reactivity -->
+        <section id="reactivity" class="section">
+            <h2>Core Reactivity</h2>
+            <p>LumaJS provides a React-like reactivity system with hooks and components.</p>
+
+            <h3>Creating Elements with h()</h3>
+            <div class="code-block">
+                <pre><code><span class="keyword">import</span> { h } <span class="keyword">from</span> <span class="string">'@krishna.dev1/lumajs'</span>;
+
+<span class="comment">// Basic element</span>
+<span class="keyword">const</span> element = <span class="function">h</span>(<span class="string">'div'</span>, { <span class="string">class:</span> <span class="string">'container'</span> }, <span class="string">'Hello World'</span>);
+
+<span class="comment">// With styles</span>
+<span class="keyword">const</span> styled = <span class="function">h</span>(<span class="string">'button'</span>, {
+  <span class="string">style:</span> { <span class="string">color:</span> <span class="string">'blue'</span>, <span class="string">padding:</span> <span class="string">'10px'</span> },
+  <span class="string">onClick:</span> () => <span class="function">console.log</span>(<span class="string">'clicked'</span>)
+}, <span class="string">'Click me'</span>);
+
+<span class="comment">// Nested elements</span>
+<span class="keyword">const</span> nested = <span class="function">h</span>(<span class="string">'div'</span>, {},
+  <span class="function">h</span>(<span class="string">'h1'</span>, {}, <span class="string">'Title'</span>),
+  <span class="function">h</span>(<span class="string">'p'</span>, {}, <span class="string">'Paragraph'</span>)
+);</code></pre>
+            </div>
+        </section>
+
+        <!-- Hooks -->
+        <section id="hooks" class="section">
+            <h2>Hooks</h2>
+            <p>LumaJS implements all the essential React hooks with a compatible API.</p>
+
+            <table class="api-table">
+                <thead>
+                    <tr>
+                        <th>Hook</th>
+                        <th>Description</th>
+                        <th>Usage</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>useState</code></td>
+                        <td>Manage component state</td>
+                        <td><code>const [value, setValue] = useState(initial)</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>useEffect</code></td>
+                        <td>Side effects with cleanup</td>
+                        <td><code>useEffect(() => { ... }, [deps])</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>useRef</code></td>
+                        <td>Mutable references</td>
+                        <td><code>const ref = useRef(initial)</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>useMemo</code></td>
+                        <td>Memoized computed values</td>
+                        <td><code>const value = useMemo(() => compute(), [deps])</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>useCallback</code></td>
+                        <td>Memoized functions</td>
+                        <td><code>const fn = useCallback(() => { ... }, [deps])</code></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>useState Example</h3>
+            <div class="code-block">
+                <pre><code><span class="keyword">function</span> <span class="function">TodoList</span>() {
+  <span class="keyword">const</span> [todos, setTodos] = <span class="function">useState</span>([]);
+  <span class="keyword">const</span> [input, setInput] = <span class="function">useState</span>(<span class="string">''</span>);
+
+  <span class="keyword">const</span> addTodo = () => {
+    <span class="function">setTodos</span>([...todos, input]);
+    <span class="function">setInput</span>(<span class="string">''</span>);
+  };
+
+  <span class="keyword">return</span> <span class="function">h</span>(<span class="string">'div'</span>, {},
+    <span class="function">h</span>(<span class="string">'input'</span>, {
+      <span class="string">value:</span> input,
+      <span class="string">onInput:</span> (e) => <span class="function">setInput</span>(e.target.value)
+    }),
+    <span class="function">h</span>(<span class="string">'button'</span>, { <span class="string">onClick:</span> addTodo }, <span class="string">'Add'</span>),
+    <span class="function">h</span>(<span class="string">'ul'</span>, {},
+      ...todos.map(todo => <span class="function">h</span>(<span class="string">'li'</span>, {}, todo))
+    )
+  );
+}</code></pre>
+            </div>
+        </section>
+
+        <!-- Animations -->
+        <section id="animations" class="section">
+            <h2>Animations</h2>
+            <p>Professional-grade animations with a GSAP-like API.</p>
+
+            <h3>Basic Animation</h3>
+            <div class="code-block">
+                <pre><code><span class="keyword">import</span> { to } <span class="keyword">from</span> <span class="string">'@krishna.dev1/lumajs/dist/luma-animate'</span>;
+
+<span class="comment">// Animate an element</span>
+<span class="function">to</span>(element, {
+  <span class="string">opacity:</span> <span class="number">0</span>,
+  <span class="string">x:</span> <span class="number">100</span>,
+  <span class="string">rotation:</span> <span class="number">180</span>
+}, {
+  <span class="string">duration:</span> <span class="number">1000</span>,
+  <span class="string">easing:</span> <span class="string">'easeOutBack'</span>
+});</code></pre>
+            </div>
+
+            <div class="demo-box">
+                <div class="demo-title">Animation Demo</div>
+                <div class="demo-content">
+                    <div class="animated-box" id="animated-box"></div>
+                    <div style="text-align: center;">
+                        <button class="btn" id="animate-btn">Animate</button>
+                    </div>
+                </div>
+            </div>
+
+            <h3>Available Easings</h3>
+            <p>30+ easing functions including: linear, easeIn, easeOut, easeInOut, easeInBack, easeOutBack, easeInElastic, easeOutElastic, easeInBounce, easeOutBounce, and spring physics.</p>
+        </section>
+
+        <!-- Timeline -->
+        <section id="timeline" class="section">
+            <h2>Timeline</h2>
+            <p>Sequence multiple animations with precise timing control.</p>
+
+            <div class="code-block">
+                <pre><code><span class="keyword">import</span> { Timeline } <span class="keyword">from</span> <span class="string">'@krishna.dev1/lumajs/dist/luma-animate'</span>;
+
+<span class="keyword">const</span> tl = <span class="keyword">new</span> <span class="function">Timeline</span>();
+
+tl.<span class="function">to</span>(box1, { <span class="string">x:</span> <span class="number">100</span> }, { <span class="string">duration:</span> <span class="number">1000</span> })
+  .<span class="function">to</span>(box2, { <span class="string">y:</span> <span class="number">100</span> }, { <span class="string">duration:</span> <span class="number">800</span>, <span class="string">position:</span> <span class="string">'+=200'</span> })
+  .<span class="function">to</span>(box3, { <span class="string">scale:</span> <span class="number">2</span> }, { <span class="string">duration:</span> <span class="number">500</span>, <span class="string">position:</span> <span class="string">'-=300'</span> })
+  .<span class="function">play</span>();</code></pre>
+            </div>
+        </section>
+
+        <!-- 3D Basics -->
+        <section id="3d-basics" class="section">
+            <h2>3D Rendering</h2>
+            <p>Create stunning 3D scenes with WebGL, all in just 12KB.</p>
+
+            <h3>Basic 3D Scene</h3>
+            <div class="code-block">
+                <pre><code><span class="keyword">import</span> { Scene, PerspectiveCamera, WebGLRenderer, Mesh, 
+         BoxGeometry, PhongMaterial } 
+<span class="keyword">from</span> <span class="string">'@krishna.dev1/lumajs/dist/luma-3d'</span>;
+
+<span class="comment">// Create scene</span>
+<span class="keyword">const</span> scene = <span class="keyword">new</span> <span class="function">Scene</span>();
+<span class="keyword">const</span> camera = <span class="keyword">new</span> <span class="function">PerspectiveCamera</span>(<span class="number">75</span>, width / height, <span class="number">0.1</span>, <span class="number">1000</span>);
+<span class="keyword">const</span> renderer = <span class="keyword">new</span> <span class="function">WebGLRenderer</span>(canvas);
+
+<span class="comment">// Create mesh</span>
+<span class="keyword">const</span> geometry = <span class="keyword">new</span> <span class="function">BoxGeometry</span>(<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>);
+<span class="keyword">const</span> material = <span class="keyword">new</span> <span class="function">PhongMaterial</span>({ <span class="string">color:</span> [<span class="number">0.5</span>, <span class="number">0.5</span>, <span class="number">1.0</span>] });
+<span class="keyword">const</span> cube = <span class="keyword">new</span> <span class="function">Mesh</span>(geometry, material);
+
+scene.<span class="function">add</span>(cube);
+camera.position[<span class="number">2</span>] = <span class="number">5</span>;
+
+<span class="comment">// Animation loop</span>
+<span class="keyword">function</span> <span class="function">animate</span>() {
+  <span class="function">requestAnimationFrame</span>(animate);
+  cube.rotation[<span class="number">1</span>] += <span class="number">0.01</span>;
+  renderer.<span class="function">render</span>(scene, camera);
+}
+
+<span class="function">animate</span>();</code></pre>
+            </div>
+        </section>
+
+        <!-- Geometries -->
+        <section id="geometries" class="section">
+            <h2>Geometries</h2>
+            <p>Built-in geometry primitives for common 3D shapes.</p>
+
+            <table class="api-table">
+                <thead>
+                    <tr>
+                        <th>Geometry</th>
+                        <th>Constructor</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Box</td>
+                        <td><code>new BoxGeometry(width, height, depth)</code></td>
+                        <td>Rectangular prism / cube</td>
+                    </tr>
+                    <tr>
+                        <td>Sphere</td>
+                        <td><code>new SphereGeometry(radius, segments, rings)</code></td>
+                        <td>Spherical shape</td>
+                    </tr>
+                    <tr>
+                        <td>Plane</td>
+                        <td><code>new PlaneGeometry(width, height)</code></td>
+                        <td>Flat rectangular surface</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Materials -->
+        <section id="materials" class="section">
+            <h2>Materials</h2>
+            <p>Material types for different rendering styles.</p>
+
+            <div class="code-block">
+                <pre><code><span class="keyword">import</span> { BasicMaterial, PhongMaterial } 
+<span class="keyword">from</span> <span class="string">'@krishna.dev1/lumajs/dist/luma-3d'</span>;
+
+<span class="comment">// Basic material (solid color)</span>
+<span class="keyword">const</span> basic = <span class="keyword">new</span> <span class="function">BasicMaterial</span>({
+  <span class="string">color:</span> [<span class="number">1.0</span>, <span class="number">0.0</span>, <span class="number">0.0</span>] <span class="comment">// RGB (red)</span>
+});
+
+<span class="comment">// Phong material (lighting)</span>
+<span class="keyword">const</span> phong = <span class="keyword">new</span> <span class="function">PhongMaterial</span>({
+  <span class="string">color:</span> [<span class="number">0.5</span>, <span class="number">0.8</span>, <span class="number">1.0</span>], <span class="comment">// RGB (light blue)</span>
+  <span class="string">shininess:</span> <span class="number">32.0</span>
+});</code></pre>
+            </div>
+        </section>
+
+        <!-- Camera Controls -->
+        <section id="camera" class="section">
+            <h2>Camera & Controls</h2>
+            <p>Interactive camera controls for 3D scenes.</p>
+
+            <div class="code-block">
+                <pre><code><span class="keyword">import</span> { OrbitControls } <span class="keyword">from</span> <span class="string">'@krishna.dev1/lumajs/dist/luma-3d'</span>;
+
+<span class="keyword">const</span> controls = <span class="keyword">new</span> <span class="function">OrbitControls</span>(camera, canvas);
+
+<span class="comment">// Controls are automatically enabled:</span>
+<span class="comment">// - Drag to rotate</span>
+<span class="comment">// - Scroll to zoom</span>
+<span class="comment">// - Automatic camera updates</span></code></pre>
+            </div>
+        </section>
+
+        <!-- Examples -->
+        <section id="example-counter" class="section">
+            <h2>Complete Examples</h2>
+            
+            <h3>Counter Application</h3>
+            <div class="code-block">
+                <pre><code><span class="keyword">import</span> { h, mount, useState } <span class="keyword">from</span> <span class="string">'@krishna.dev1/lumajs'</span>;
+
+<span class="keyword">function</span> <span class="function">App</span>() {
+  <span class="keyword">const</span> [count, setCount] = <span class="function">useState</span>(<span class="number">0</span>);
+
+  <span class="keyword">return</span> <span class="function">h</span>(<span class="string">'div'</span>, { <span class="string">style:</span> { <span class="string">padding:</span> <span class="string">'20px'</span> } },
+    <span class="function">h</span>(<span class="string">'h1'</span>, {}, <span class="string">`Count: ${count}`</span>),
+    <span class="function">h</span>(<span class="string">'div'</span>, { <span class="string">style:</span> { <span class="string">display:</span> <span class="string">'flex'</span>, <span class="string">gap:</span> <span class="string">'10px'</span> } },
+      <span class="function">h</span>(<span class="string">'button'</span>, { <span class="string">onClick:</span> () => <span class="function">setCount</span>(count - <span class="number">1</span>) }, <span class="string">'-'</span>),
+      <span class="function">h</span>(<span class="string">'button'</span>, { <span class="string">onClick:</span> () => <span class="function">setCount</span>(<span class="number">0</span>) }, <span class="string">'Reset'</span>),
+      <span class="function">h</span>(<span class="string">'button'</span>, { <span class="string">onClick:</span> () => <span class="function">setCount</span>(count + <span class="number">1</span>) }, <span class="string">'+'</span>)
+    )
+  );
+}
+
+<span class="function">mount</span>(App, document.getElementById(<span class="string">'root'</span>));</code></pre>
+            </div>
+        </section>
+    </main>
+
+    <!-- Load LumaJS from node_modules -->
+    <script type="module">
+        // Import LumaJS from npm package
+        import { h, mount, useState } from './node_modules/@krishna.dev1/lumajs/dist/luma.esm.js';
+
+        // Counter Demo
+        function CounterDemo() {
+            const [count, setCount] = useState(0);
+
+            return h('div', { class: 'counter-demo' },
+                h('button', {
+                    class: 'btn btn-secondary',
+                    onClick: () => setCount(count - 1)
+                }, '-'),
+                h('div', { class: 'counter-value' }, String(count)),
+                h('button', {
+                    class: 'btn',
+                    onClick: () => setCount(count + 1)
+                }, '+'),
+                h('button', {
+                    class: 'btn btn-secondary',
+                    onClick: () => setCount(0),
+                    style: { marginLeft: '10px' }
+                }, 'Reset')
+            );
+        }
+
+        // Mount counter demo
+        const counterContainer = document.getElementById('counter-demo');
+        if (counterContainer) {
+            mount(CounterDemo, counterContainer);
+        }
+
+        // Simple animation for the animated box
+        const animateBtn = document.getElementById('animate-btn');
+        const animatedBox = document.getElementById('animated-box');
+        
+        if (animateBtn && animatedBox) {
+            animateBtn.addEventListener('click', () => {
+                // Simple CSS animation as fallback since we're loading from node_modules
+                animatedBox.style.transition = 'all 1s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
+                
+                const currentTransform = animatedBox.style.transform || '';
+                const isRotated = currentTransform.includes('rotate');
+                
+                if (isRotated) {
+                    animatedBox.style.transform = 'rotate(0deg) scale(1)';
+                } else {
+                    animatedBox.style.transform = 'rotate(360deg) scale(1.2)';
+                }
+            });
+        }
+
+        // Smooth scroll for sidebar links
+        document.querySelectorAll('.sidebar-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href').substring(1);
+                const targetElement = document.getElementById(targetId);
+                
+                if (targetElement) {
+                    targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    
+                    // Update active state
+                    document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
