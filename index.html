@@ -820,8 +820,15 @@ camera.position[<span class="number">2</span>] = <span class="number">5</span>;
     </main>
 
     <!-- LumaJS Application -->
-    <script type="module">
-        import { h, mount, useState, useEffect } from './node_modules/@krishna.dev1/lumajs/dist/luma.esm.js';
+    <script src="./node_modules/@krishna.dev1/lumajs/dist/luma.umd.js"></script>
+    <script>
+        // Extract from global Luma object
+        const { h, render, useState, useEffect } = window.Luma;
+        
+        // Create mount wrapper for component instances
+        function mount(Component, container) {
+            render(Component(), container);
+        }
 
         // Header Component
         function Header() {
