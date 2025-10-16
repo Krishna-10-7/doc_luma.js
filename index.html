@@ -825,9 +825,9 @@ camera.position[<span class="number">2</span>] = <span class="number">5</span>;
         // Extract from global Luma object
         const { h, render, useState, useEffect } = window.Luma;
         
-        // Create mount wrapper for component instances
+        // Create mount wrapper - components need to be wrapped in h()
         function mount(Component, container) {
-            render(Component(), container);
+            render(h(Component, {}), container);
         }
 
         // Header Component
